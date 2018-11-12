@@ -1,64 +1,23 @@
 <template>
     <div id="container">
-        <div
-                v-if="globals"
-                id="globals"
-                class="md-layout">
-            <div class="md-layout-item"><strong>Total Market Cap:</strong> ${{ globals.total_market_cap_usd }}</div>
-            <div class="md-layout-item"><strong>24h Volume:</strong>
-                ${{ globals.total_24h_volume_usd }}
-            </div>
-            <div class="md-layout-item"><strong>BTC Dominance:</strong>
-                {{ globals.bitcoin_percentage_of_market_cap }}%
-            </div>
-        </div>
-        <div v-if="coins && coins.length">
-            <v-data-table
-                    :headers="headers"
-                    :items="coins"
-                    :loading="true"
-                    class="elevation-1"
-                    hide-actions
-            >
-                <template
-                        slot="items"
-                        slot-scope="props">
-                    <tr
-                            class="textRight">
-                        <td>{{ props.item.rank }}</td>
-                        <td
-                                md-label="Name"
-                                md-sort-by="name"
-                                class="textLeft">{{ props.item.name }}
-                        </td>
-                        <td class="textLeft">{{ props.item.symbol }}</td>
-                        <td>{{ props.item.price_usd }}</td>
-                        <td>{{ props.item.price_eur }}</td>
-                        <td v-if="props.item.percent_change_1h"><span
-                                :class="{ positive: props.item.percent_change_1h > 0, negative: props.item.percent_change_1h < 0}">{{ props.item.percent_change_1h }}%</span>
-                        </td>
-                        <td v-else>0%</td>
-                        <td v-if="props.item.percent_change_24h"><span
-                                :class="{ positive: props.item.percent_change_24h > 0, negative: props.item.percent_change_24h < 0}">{{ props.item.percent_change_24h }}%</span>
-                        </td>
-                        <td v-else>0%</td>
-                        <td v-if="props.item.percent_change_7d"><span
-                                :class="{ positive: props.item.percent_change_7d > 0, negative: props.item.percent_change_7d < 0}">{{ props.item.percent_change_7d }}%</span>
-                        </td>
-                        <td v-else>0%</td>
-                        <td v-if="props.item.market_cap_usd">{{ props.item.market_cap_usd }}</td>
-                        <td v-else>0</td>
-                    </tr>
-                </template>
-            </v-data-table>
-        </div>
-        <div v-if="errors && errors.length">
+        <section v-if="errored">
+            <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+        </section>
+
+        <section v-else>
+            <div v-if="loading">Loading...</div>
+
             <div
-                    v-for="error of errors"
-                    :key="error.id">
-                {{ error.message }}
+                    v-else
+                    v-for="currency in info"
+                    :key="currency.id"
+                    class="currency"
+            >
+                {{ currency.name }}:
+                {{ currency.quotes.USD.price }}
             </div>
-        </div>
+
+        </section>
     </div>
 </template>
 
@@ -108,42 +67,27 @@ export default {
           value: "-"
         }
       ],
-      coins: [],
-      globals: [],
-      errors: []
+      info: null,
+      loading: true,
+      errored: false
     };
   },
-
-  // Fetches posts when the component is created.
-  created() {
-    function getCoins() {
-      return axios.get(
-        "https://api.coinmarketcap.com/v1/ticker/?convert=EUR&limit=100"
-      );
-    }
-
-    function getGlobals() {
-      return axios.get("https://api.coinmarketcap.com/v1/global/?convert=EUR");
-    }
-
+  filters: {
+    // currencydecimal(value) {
+    //   return value.toFixed(2);
+    // }
+  },
+  mounted() {
     axios
-      .all([getCoins(), getGlobals()])
-      .then(
-        axios.spread((coins, globals) => {
-          this.coins = coins.data;
-          this.globals = globals.data;
-          // add thousands seperator
-          this.globals.total_market_cap_usd = globals.data.total_market_cap_usd.toLocaleString(
-            "en-US"
-          );
-          this.globals.total_24h_volume_usd = globals.data.total_24h_volume_usd.toLocaleString(
-            "en-US"
-          );
-        })
-      )
-      .catch(e => {
-        this.errors.push(e);
-      });
+      .get("https://api.coinmarketcap.com/v2/ticker/?convert=EUR&limit=10")
+      .then(response => {
+        this.info = response.data.data;
+      })
+      .catch(error => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => (this.loading = false));
   }
 };
 </script>
