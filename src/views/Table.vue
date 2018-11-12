@@ -3,20 +3,40 @@
         <section v-if="errored">
             <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
         </section>
-
         <section v-else>
             <div v-if="loading">Loading...</div>
-
-            <div
+            <v-data-table
                     v-else
-                    v-for="currency in info"
-                    :key="currency.id"
-                    class="currency"
+                    :headers="headers"
+                    :items="info"
+                    :hide-actions="true"
             >
-                {{ currency.name }}:
-                {{ currency.quotes.USD.price }}
-            </div>
-
+                <template
+                        slot="items"
+                        slot-scope="props">
+                    <tr class="textRight">
+                        <td>{{ props.item.rank }}</td>
+                        <td class="textLeft">{{ props.item.name }}</td>
+                        <td class="textLeft">{{ props.item.symbol }}</td>
+                        <td>{{ props.item.quotes.USD.price }}</td>
+                        <td>{{ props.item.quotes.EUR.price }}</td>
+                        <td v-if="props.item.quotes.USD.percent_change_1h"><span
+                                :class="{ positive: props.item.quotes.USD.percent_change_1h > 0, negative: props.item.quotes.USD.percent_change_1h < 0}">{{ props.item.quotes.USD.percent_change_1h }}%</span>
+                        </td>
+                        <td v-else>0%</td>
+                        <td v-if="props.item.quotes.USD.percent_change_24h"><span
+                                :class="{ positive: props.item.quotes.USD.percent_change_24h > 0, negative: props.item.quotes.USD.percent_change_24h < 0}">{{ props.item.quotes.USD.percent_change_24h }}%</span>
+                        </td>
+                        <td v-else>0%</td>
+                        <td v-if="props.item.quotes.USD.percent_change_7d"><span
+                                :class="{ positive: props.item.quotes.USD.percent_change_7d > 0, negative: props.item.quotes.USD.percent_change_7d < 0}">{{ props.item.quotes.USD.percent_change_7d }}%</span>
+                        </td>
+                        <td v-else>0%</td>
+                        <td v-if="props.item.quotes.USD.market_cap">{{ props.item.quotes.USD.market_cap }}</td>
+                        <td v-else>0</td>
+                    </tr>
+                </template>
+            </v-data-table>
         </section>
     </div>
 </template>
@@ -27,12 +47,15 @@ import axios from "axios";
 export default {
   data() {
     return {
+      pagination: {
+        sortBy: "rank"
+      },
       headers: [
         {
           text: "#",
-          align: "left",
+          align: "center",
           sortable: true,
-          value: "#"
+          value: "rank"
         },
         {
           text: "Name",
@@ -40,31 +63,37 @@ export default {
         },
         {
           text: "Symbol",
-          value: "-"
+          value: "symbol"
         },
         {
           text: "Price $",
-          value: "-"
+          align: "right",
+          value: "quotes.USD.price"
         },
         {
           text: "Price €",
-          value: "-"
+          align: "right",
+          value: "quotes.EUR.price"
         },
         {
           text: "1h",
-          value: "-"
+          align: "center",
+          value: "quotes.USD.percent_change_1h"
         },
         {
           text: "24h",
-          value: "-"
+          align: "center",
+          value: "quotes.USD.percent_change_24h"
         },
         {
           text: "7d",
-          value: "-"
+          align: "center",
+          value: "quotes.USD.percent_change_7d"
         },
         {
           text: "Market Cap",
-          value: "-"
+          align: "right",
+          value: "quotes.USD.market_cap"
         }
       ],
       info: null,
@@ -81,7 +110,7 @@ export default {
     axios
       .get("https://api.coinmarketcap.com/v2/ticker/?convert=EUR&limit=10")
       .then(response => {
-        this.info = response.data.data;
+        this.info = Object.values(response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -96,14 +125,6 @@ export default {
   max-width: 1200px;
   margin: 0 auto;
   padding-top: 10px;
-}
-
-.textRight {
-  text-align: right;
-}
-
-.textCenter {
-  text-align: center;
 }
 
 .negative {
