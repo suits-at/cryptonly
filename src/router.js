@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
+import Table from "./views/Table.vue";
 
 Vue.use(Router);
 
@@ -10,8 +10,8 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home
+      name: "table",
+      component: Table
     },
     {
       path: "/about",
@@ -21,12 +21,6 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/About.vue")
-    },
-    {
-      path: "/table",
-      name: "table",
-      component: () =>
-        import(/* webpackChunkName: "table" */ "./views/Table.vue")
     }
   ]
 });
