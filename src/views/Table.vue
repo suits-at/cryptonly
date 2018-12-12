@@ -1,5 +1,5 @@
 <template>
-    <div id="container">
+    <div>
         <section v-if="errored">
             <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
         </section>
@@ -134,11 +134,11 @@ export default {
 };
 </script>
 <style>
-#container {
+/*#container {
   max-width: 1200px;
   margin: 0 auto;
   padding-top: 10px;
-}
+}*/
 
 .negative {
   color: red;

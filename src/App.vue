@@ -1,27 +1,53 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Table</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<div id="app">
+  <v-app id="inspire">
+    <v-navigation-drawer
+            fixed
+            v-model="drawer"
+            app
+    >
+      <v-list dense>
+        <v-list-tile>
+          <v-list-tile-action>
+              <v-icon>fas fa-home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title><router-link to="/">Home</router-link></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>fas fa-envelope</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title><router-link to="/about">About</router-link></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar color="teal" dark fixed app>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title>cryptonly <a href="https://github.com/suits-at/cryptonly-vue" target="_blank"><v-icon>fab fa-github</v-icon></a></v-toolbar-title>
+    </v-toolbar>
+    <v-content>
+      <v-container fluid fill-height>
+          <router-view/>
+      </v-container>
+    </v-content>
+    <v-footer color="teal" app inset>
+      <span class="white--text">&nbsp; &copy; 2018</span>
+    </v-footer>
+  </v-app>
+</div>
 </template>
 
-<!--<template>
-    <div id="app">
-        <v-app>
-            <v-navigation-drawer app>Test</v-navigation-drawer>
-            <v-toolbar app></v-toolbar>
-            <v-content>
-                <v-container fluid>
-                    <router-view></router-view>
-                </v-container>
-            </v-content>
-            <v-footer app>Copyright 2018</v-footer>
-        </v-app>
-    </div>
-</template>-->
+<script>
+export default {
+  data: () => ({
+    drawer: null
+  })
+};
+</script>
 <style lang="scss">
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -33,7 +59,6 @@
 
 #nav {
   margin-top: 30px;
-
   a {
     font-weight: bold;
     color: #2c3e50;
