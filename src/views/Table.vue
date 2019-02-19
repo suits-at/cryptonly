@@ -3,72 +3,84 @@
     <section v-if="errored">
       <p>
         We're sorry, we're not able to retrieve this information at the moment,
-        please try back later
+        please try back later. Whitelisting this domain in your adblocker might
+        help as well.
       </p>
     </section>
     <section v-else>
       <div v-if="loading">Loading...</div>
-      <v-data-table
-        v-else
-        :headers="headers"
-        :items="info"
-        :hide-actions="true"
-      >
-        <template slot="items" slot-scope="props">
-          <tr class="narrow" @click="props.expanded = !props.expanded">
-            <td>{{ props.item.rank }}</td>
-            <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
-            <td class="textLeft">{{ props.item.symbol }}</td>
-            <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
-            <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
-            <td v-if="props.item.quotes.USD.percent_change_1h">
-              <span
-                :class="{
-                  positive: props.item.quotes.USD.percent_change_1h > 0,
-                  negative: props.item.quotes.USD.percent_change_1h < 0
-                }"
-                >{{ props.item.quotes.USD.percent_change_1h }}%</span
+      <div v-else>
+        <v-card-title
+          >cryptonly
+          <v-spacer />
+          <v-text-field
+            v-model="search"
+            label="Search"
+            singe-line
+            hide-details
+            append-icon="fa-search"
+          />
+        </v-card-title>
+        <v-data-table :headers="headers" :items="info" :search="search">
+          <template slot="items" slot-scope="props">
+            <tr class="narrow" @click="props.expanded = !props.expanded">
+              <td>{{ props.item.rank }}</td>
+              <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
+              <td class="textLeft">{{ props.item.symbol }}</td>
+              <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
+              <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
+              <td v-if="props.item.quotes.USD.percent_change_1h">
+                <span
+                  :class="{
+                    positive: props.item.quotes.USD.percent_change_1h > 0,
+                    negative: props.item.quotes.USD.percent_change_1h < 0
+                  }"
+                  >{{ props.item.quotes.USD.percent_change_1h }}%</span
+                >
+              </td>
+              <td v-else>0%</td>
+              <td v-if="props.item.quotes.USD.percent_change_24h">
+                <span
+                  :class="{
+                    positive: props.item.quotes.USD.percent_change_24h > 0,
+                    negative: props.item.quotes.USD.percent_change_24h < 0
+                  }"
+                  >{{ props.item.quotes.USD.percent_change_24h }}%</span
+                >
+              </td>
+              <td v-else>0%</td>
+              <td v-if="props.item.quotes.USD.percent_change_7d">
+                <span
+                  :class="{
+                    positive: props.item.quotes.USD.percent_change_7d > 0,
+                    negative: props.item.quotes.USD.percent_change_7d < 0
+                  }"
+                  >{{ props.item.quotes.USD.percent_change_7d }}%</span
+                >
+              </td>
+              <td v-else>0%</td>
+              <td
+                v-if="props.item.quotes.USD.market_cap"
+                class="hidden-xs-only"
               >
-            </td>
-            <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.percent_change_24h">
-              <span
-                :class="{
-                  positive: props.item.quotes.USD.percent_change_24h > 0,
-                  negative: props.item.quotes.USD.percent_change_24h < 0
-                }"
-                >{{ props.item.quotes.USD.percent_change_24h }}%</span
-              >
-            </td>
-            <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.percent_change_7d">
-              <span
-                :class="{
-                  positive: props.item.quotes.USD.percent_change_7d > 0,
-                  negative: props.item.quotes.USD.percent_change_7d < 0
-                }"
-                >{{ props.item.quotes.USD.percent_change_7d }}%</span
-              >
-            </td>
-            <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.market_cap" class="hidden-xs-only">
-              ${{ props.item.quotes.USD.market_cap }}
-            </td>
-            <td v-else>0</td>
-          </tr>
-        </template>
-        <template slot="expand" slot-scope="props">
-          <v-card flat>
-            <p>Name: {{ props.item.name }}</p>
-            <p>Price USD: ${{ props.item.quotes.USD.price }}</p>
-            <p>Price EUR: {{ props.item.quotes.EUR.price }}€</p>
-            <p v-if="props.item.quotes.USD.market_cap">
-              Market Cap: ${{ props.item.quotes.USD.market_cap }}
-            </p>
-            <p v-else>Market Cap: 0</p>
-          </v-card>
-        </template>
-      </v-data-table>
+                ${{ props.item.quotes.USD.market_cap }}
+              </td>
+              <td v-else>0</td>
+            </tr>
+          </template>
+          <template slot="expand" slot-scope="props">
+            <v-card flat>
+              <p>Name: {{ props.item.name }}</p>
+              <p>Price USD: ${{ props.item.quotes.USD.price }}</p>
+              <p>Price EUR: {{ props.item.quotes.EUR.price }}€</p>
+              <p v-if="props.item.quotes.USD.market_cap">
+                Market Cap: ${{ props.item.quotes.USD.market_cap }}
+              </p>
+              <p v-else>Market Cap: 0</p>
+            </v-card>
+          </template>
+        </v-data-table>
+      </div>
     </section>
   </div>
 </template>
@@ -134,7 +146,8 @@ export default {
       ],
       info: null,
       loading: true,
-      errored: false
+      errored: false,
+      search: ""
     };
   },
   filters: {
@@ -144,7 +157,7 @@ export default {
   },
   mounted() {
     axios
-      .get("https://api.coinmarketcap.com/v2/ticker/?convert=EUR&limit=50")
+      .get("https://api.coinmarketcap.com/v2/ticker/?convert=EUR&limit=5000")
       .then(response => {
         this.info = Object.values(response.data.data);
       })
