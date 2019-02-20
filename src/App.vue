@@ -9,7 +9,47 @@
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title
-                ><router-link to="/">Home</router-link></v-list-tile-title
+                ><router-link to="/">Overview</router-link></v-list-tile-title
+              >
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-icon>fas fa-eye</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title
+                ><router-link to="/">Watchlist</router-link></v-list-tile-title
+              >
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-icon>fas fa-chart-bar</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title
+                ><router-link to="/">Portfolio</router-link></v-list-tile-title
+              >
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-icon>fas fa-user-circle</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title
+                ><router-link to="/">Profile</router-link></v-list-tile-title
+              >
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-icon>fas fa-cog</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title
+                ><router-link to="/">Settings</router-link></v-list-tile-title
               >
             </v-list-tile-content>
           </v-list-tile>
@@ -42,11 +82,12 @@
         </v-container>
       </v-content>
       <v-footer color="teal" app inset>
-        <span class="white--text"
-          >&nbsp; made with
-          <v-icon class="white--text">fas fa-heart fa-1x</v-icon> by SUITS -
-          &copy; 2019</span
-        >
+        <span class="white--text pl-3">
+          made with <v-icon class="white--text">fas fa-heart fa-1x</v-icon> by
+          <a class="white--text" href="https://www.suits.at">SUITS</a>
+        </span>
+        <v-spacer />
+        <span class="white--text pr-3">&copy; 2019</span>
       </v-footer>
     </v-app>
   </div>
