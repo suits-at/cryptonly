@@ -70,14 +70,23 @@
             </tr>
           </template>
           <template slot="expand" slot-scope="props">
-            <v-card flat>
-              <p>Name: {{ props.item.name }}</p>
-              <p>Price USD: ${{ props.item.quotes.USD.price }}</p>
-              <p>Price EUR: {{ props.item.quotes.EUR.price }}€</p>
-              <p v-if="props.item.quotes.USD.market_cap">
-                Market Cap: ${{ props.item.quotes.USD.market_cap }}
+            <v-card flat class="pl-3 pt-3">
+              <p><span class="bold">Name:</span> {{ props.item.name }}</p>
+              <p>
+                <span class="bold">Price USD:</span> ${{
+                  props.item.quotes.USD.price
+                }}
               </p>
-              <p v-else>Market Cap: 0</p>
+              <p>
+                <span class="bold">Price EUR:</span>
+                {{ props.item.quotes.EUR.price }}€
+              </p>
+              <p v-if="props.item.quotes.USD.market_cap">
+                <span class="bold">Market Cap:</span> ${{
+                  props.item.quotes.USD.market_cap
+                }}
+              </p>
+              <p v-else><span class="bold">Market Cap:</span> 0</p>
             </v-card>
           </template>
         </v-data-table>
@@ -176,13 +185,7 @@ export default {
   }
 };
 </script>
-<style>
-/*#container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 10px;
-}*/
-
+<style lang="scss" scoped>
 .negative {
   color: red;
 }
@@ -220,5 +223,14 @@ th:nth-child(6),
 th:nth-child(7),
 th:nth-child(8) {
   text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+.v-card {
+  p {
+    text-align: left;
+  }
 }
 </style>
