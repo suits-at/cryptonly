@@ -42,7 +42,11 @@
         </v-container>
       </v-content>
       <v-footer color="teal" app inset>
-        <span class="white--text">&nbsp; &copy; 2019</span>
+        <span class="white--text"
+          >&nbsp; made with
+          <v-icon class="white--text">fas fa-heart fa-1x</v-icon> by SUITS -
+          &copy; 2019</span
+        >
       </v-footer>
     </v-app>
   </div>

@@ -10,18 +10,19 @@
     <section v-else>
       <div v-if="loading">Loading...</div>
       <div v-else>
-        <v-card-title
-          >cryptonly
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            label="Search"
-            singe-line
-            hide-details
-            append-icon="fa-search"
-          />
-        </v-card-title>
-        <v-data-table :headers="headers" :items="info" :search="search">
+        <v-text-field
+          v-model="search"
+          label="Search"
+          singe-line
+          hide-details
+          append-icon="fa-search"
+        />
+        <v-data-table
+          :headers="headers"
+          :items="info"
+          :search="search"
+          :rows-per-page-items="rowsPerPageItems"
+        >
           <template slot="items" slot-scope="props">
             <tr class="narrow" @click="props.expanded = !props.expanded">
               <td>{{ props.item.rank }}</td>
@@ -147,7 +148,13 @@ export default {
       info: null,
       loading: true,
       errored: false,
-      search: ""
+      search: "",
+      rowsPerPageItems: [
+        10,
+        25,
+        50,
+        { text: "$vuetify.dataIterator.rowsPerPageAll", value: -1 }
+      ]
     };
   },
   filters: {
