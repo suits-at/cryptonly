@@ -1,4 +1,4 @@
-# cryptonly
+# cryptonly [![Netlify Status](https://api.netlify.com/api/v1/badges/763a922d-363e-4a1d-b119-6e6b16ac2bfd/deploy-status)](https://app.netlify.com/sites/cryptonly-vue/deploys)
 
 ## Project setup
 ```
