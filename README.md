@@ -4,9 +4,12 @@
 ![David](https://img.shields.io/david/dev/suits-at/cryptonly.svg)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/suits-at/cryptonly.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
-# cryptonly
 
-## work in progress...
+# [cryptonly](https://cryptonly.suits.at)
+
+### The only cryptocurrency portfolio tracker you will ever need - but still at a very early stage. 
+
+Cryptonly is a PWA, therefore you can use it on any device you would like to.
 
 ## Project setup
 ```
