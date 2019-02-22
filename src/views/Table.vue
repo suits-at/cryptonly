@@ -1,98 +1,93 @@
 <template>
-  <div>
-    <section v-if="errored">
-      <p>
-        We're sorry, we're not able to retrieve this information at the moment,
-        please try back later. Whitelisting this domain in your adblocker might
-        help as well.
-      </p>
-    </section>
+  <section v-if="errored">
+    <p>
+      We're sorry, we're not able to retrieve this information at the moment,
+      please try back later. Whitelisting this domain in your adblocker might
+      help as well.
+    </p>
+  </section>
+  <section v-else>
+    <v-progress-circular v-if="loading" indeterminate color="primary" />
     <section v-else>
-      <div v-if="loading">Loading...</div>
-      <div v-else>
-        <v-text-field
-          v-model="search"
-          label="Search"
-          singe-line
-          hide-details
-          append-icon="fa-search"
-        />
-        <v-data-table
-          :headers="headers"
-          :items="info"
-          :search="search"
-          :rows-per-page-items="rowsPerPageItems"
-        >
-          <template slot="items" slot-scope="props">
-            <tr class="narrow" @click="props.expanded = !props.expanded">
-              <td>{{ props.item.rank }}</td>
-              <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
-              <td class="textLeft">{{ props.item.symbol }}</td>
-              <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
-              <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
-              <td v-if="props.item.quotes.USD.percent_change_1h">
-                <span
-                  :class="{
-                    positive: props.item.quotes.USD.percent_change_1h > 0,
-                    negative: props.item.quotes.USD.percent_change_1h < 0
-                  }"
-                  >{{ props.item.quotes.USD.percent_change_1h }}%</span
-                >
-              </td>
-              <td v-else>0%</td>
-              <td v-if="props.item.quotes.USD.percent_change_24h">
-                <span
-                  :class="{
-                    positive: props.item.quotes.USD.percent_change_24h > 0,
-                    negative: props.item.quotes.USD.percent_change_24h < 0
-                  }"
-                  >{{ props.item.quotes.USD.percent_change_24h }}%</span
-                >
-              </td>
-              <td v-else>0%</td>
-              <td v-if="props.item.quotes.USD.percent_change_7d">
-                <span
-                  :class="{
-                    positive: props.item.quotes.USD.percent_change_7d > 0,
-                    negative: props.item.quotes.USD.percent_change_7d < 0
-                  }"
-                  >{{ props.item.quotes.USD.percent_change_7d }}%</span
-                >
-              </td>
-              <td v-else>0%</td>
-              <td
-                v-if="props.item.quotes.USD.market_cap"
-                class="hidden-xs-only"
+      <v-text-field
+        v-model="search"
+        label="Search"
+        singe-line
+        hide-details
+        append-icon="fa-search"
+      />
+      <v-data-table
+        :headers="headers"
+        :items="info"
+        :search="search"
+        :rows-per-page-items="rowsPerPageItems"
+      >
+        <template slot="items" slot-scope="props">
+          <tr class="narrow" @click="props.expanded = !props.expanded">
+            <td>{{ props.item.rank }}</td>
+            <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
+            <td class="textLeft">{{ props.item.symbol }}</td>
+            <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
+            <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
+            <td v-if="props.item.quotes.USD.percent_change_1h">
+              <span
+                :class="{
+                  positive: props.item.quotes.USD.percent_change_1h > 0,
+                  negative: props.item.quotes.USD.percent_change_1h < 0
+                }"
+                >{{ props.item.quotes.USD.percent_change_1h }}%</span
               >
-                ${{ props.item.quotes.USD.market_cap }}
-              </td>
-              <td v-else>0</td>
-            </tr>
-          </template>
-          <template slot="expand" slot-scope="props">
-            <v-card flat class="pl-3 pt-3">
-              <p><span class="bold">Name:</span> {{ props.item.name }}</p>
-              <p>
-                <span class="bold">Price USD:</span> ${{
-                  props.item.quotes.USD.price
-                }}
-              </p>
-              <p>
-                <span class="bold">Price EUR:</span>
-                {{ props.item.quotes.EUR.price }}€
-              </p>
-              <p v-if="props.item.quotes.USD.market_cap">
-                <span class="bold">Market Cap:</span> ${{
-                  props.item.quotes.USD.market_cap
-                }}
-              </p>
-              <p v-else><span class="bold">Market Cap:</span> 0</p>
-            </v-card>
-          </template>
-        </v-data-table>
-      </div>
+            </td>
+            <td v-else>0%</td>
+            <td v-if="props.item.quotes.USD.percent_change_24h">
+              <span
+                :class="{
+                  positive: props.item.quotes.USD.percent_change_24h > 0,
+                  negative: props.item.quotes.USD.percent_change_24h < 0
+                }"
+                >{{ props.item.quotes.USD.percent_change_24h }}%</span
+              >
+            </td>
+            <td v-else>0%</td>
+            <td v-if="props.item.quotes.USD.percent_change_7d">
+              <span
+                :class="{
+                  positive: props.item.quotes.USD.percent_change_7d > 0,
+                  negative: props.item.quotes.USD.percent_change_7d < 0
+                }"
+                >{{ props.item.quotes.USD.percent_change_7d }}%</span
+              >
+            </td>
+            <td v-else>0%</td>
+            <td v-if="props.item.quotes.USD.market_cap" class="hidden-xs-only">
+              ${{ props.item.quotes.USD.market_cap }}
+            </td>
+            <td v-else>0</td>
+          </tr>
+        </template>
+        <template slot="expand" slot-scope="props">
+          <v-card flat class="pl-3 pt-3">
+            <p><span class="bold">Name:</span> {{ props.item.name }}</p>
+            <p>
+              <span class="bold">Price USD:</span> ${{
+                props.item.quotes.USD.price
+              }}
+            </p>
+            <p>
+              <span class="bold">Price EUR:</span>
+              {{ props.item.quotes.EUR.price }}€
+            </p>
+            <p v-if="props.item.quotes.USD.market_cap">
+              <span class="bold">Market Cap:</span> ${{
+                props.item.quotes.USD.market_cap
+              }}
+            </p>
+            <p v-else><span class="bold">Market Cap:</span> 0</p>
+          </v-card>
+        </template>
+      </v-data-table>
     </section>
-  </div>
+  </section>
 </template>
 
 <script>
