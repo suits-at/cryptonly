@@ -71,7 +71,7 @@
         ></v-toolbar-side-icon>
         <v-toolbar-title
           >cryptonly
-          <a href="https://github.com/suits-at/cryptonly-vue" target="_blank"
+          <a href="https://github.com/suits-at/cryptonly" target="_blank"
             ><v-icon>fab fa-github</v-icon></a
           ></v-toolbar-title
         >

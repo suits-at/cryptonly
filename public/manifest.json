@@ -1,6 +1,6 @@
 {
-  "name": "cryptonly-vue",
-  "short_name": "cryptonly-vue",
+  "name": "cryptonly",
+  "short_name": "cryptonly",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
