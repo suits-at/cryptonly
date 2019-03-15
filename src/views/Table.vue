@@ -93,6 +93,11 @@
 <script>
 import axios from "axios";
 
+const api_key = process.env.VUE_APP_API_KEY;
+const fullURL =
+  "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+const headers = { "X-CMC_PRO_API_KEY": api_key };
+
 export default {
   data() {
     return {
@@ -161,14 +166,14 @@ export default {
       ]
     };
   },
-  filters: {
-    // currencydecimal(value) {
-    //   return value.toFixed(2);
-    // }
-  },
+  /*  filters: {
+     currencydecimal(value) {
+       return value.toFixed(2);
+     }
+  },*/
   mounted() {
     axios
-      .get("https://api.coinmarketcap.com/v2/ticker/?convert=EUR&limit=5000")
+      .get(fullURL, { headers: headers })
       .then(response => {
         this.info = Object.values(response.data.data);
       })
