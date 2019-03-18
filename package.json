@@ -12,7 +12,7 @@
     "axios": "^0.18.0",
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
-    "vue": "^2.6.8",
+    "vue": "^2.6.9",
     "vue-router": "^3.0.2",
     "vuetify": "^1.5.5",
     "vuex": "^3.1.0"
@@ -32,7 +32,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-cli-plugin-vuetify": "^0.4.6",
-    "vue-template-compiler": "^2.6.8",
+    "vue-template-compiler": "^2.6.9",
     "vuetify-loader": "^1.2.1"
   },
   "eslintConfig": {
