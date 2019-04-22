@@ -28,14 +28,16 @@
             <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
             <td class="textLeft">{{ props.item.symbol }}</td>
             <td class="hidden-xs-only">${{ props.item.quote.USD.price }}</td>
-            <td class="hidden-xs-only">{{ props.item.quote.USD.price }}€</td>
+            <!--            <td class="hidden-xs-only">{{ props.item.quote.USD.price }}€</td>-->
             <td v-if="props.item.quote.USD.percent_change_1h">
               <span
                 :class="{
                   positive: props.item.quote.USD.percent_change_1h > 0,
                   negative: props.item.quote.USD.percent_change_1h < 0
                 }"
-                >{{ props.item.quote.USD.percent_change_1h }}%</span
+                >{{
+                  currencydecimal(props.item.quote.USD.percent_change_1h)
+                }}%</span
               >
             </td>
             <td v-else>0%</td>
@@ -45,7 +47,9 @@
                   positive: props.item.quote.USD.percent_change_24h > 0,
                   negative: props.item.quote.USD.percent_change_24h < 0
                 }"
-                >{{ props.item.quote.USD.percent_change_24h }}%</span
+                >{{
+                  currencydecimal(props.item.quote.USD.percent_change_24h)
+                }}%</span
               >
             </td>
             <td v-else>0%</td>
@@ -55,12 +59,14 @@
                   positive: props.item.quote.USD.percent_change_7d > 0,
                   negative: props.item.quote.USD.percent_change_7d < 0
                 }"
-                >{{ props.item.quote.USD.percent_change_7d }}%</span
+                >{{
+                  currencydecimal(props.item.quote.USD.percent_change_7d)
+                }}%</span
               >
             </td>
             <td v-else>0%</td>
             <td v-if="props.item.quote.USD.market_cap" class="hidden-xs-only">
-              ${{ props.item.quote.USD.market_cap }}
+              ${{ props.item.quote.USD.market_cap.toFixed(0) }}
             </td>
             <td v-else>0</td>
           </tr>
@@ -73,13 +79,13 @@
                 props.item.quote.USD.price
               }}
             </p>
-            <p>
+            <!--<p>
               <span class="bold">Price EUR:</span>
               {{ props.item.quote.USD.price }}€
-            </p>
+            </p>-->
             <p v-if="props.item.quote.USD.market_cap">
               <span class="bold">Market Cap:</span> ${{
-                props.item.quote.USD.market_cap
+                props.item.quote.USD.market_cap.toFixed(0)
               }}
             </p>
             <p v-else><span class="bold">Market Cap:</span> 0</p>
@@ -119,12 +125,12 @@ export default {
           value: "quote.USD.price",
           class: "hidden-xs-only"
         },
-        {
+        /*        {
           text: "Price €",
           align: "right",
           value: "quote.USD.price",
           class: "hidden-xs-only"
-        },
+        },*/
         {
           text: "1h",
           align: "center",
@@ -179,6 +185,9 @@ export default {
       .finally(() => (this.loading = false));*/
   },
   methods: {
+    currencydecimal(value) {
+      return value.toFixed(2);
+    },
     /* callLambda() {
       fetch("/.netlify/functions/hello")
         .then(response => console.log(response))
@@ -191,6 +200,9 @@ export default {
         .then(response => response.json())
         .then(json => {
           this.info = json.data;
+          /*this.info.quote.USD.percent_change_7d = this.currencydecimal(
+            this.info.quote.USD.percent_change_7d
+          );*/
           console.log(this.info);
           this.loading = false;
         });
