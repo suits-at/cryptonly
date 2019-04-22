@@ -24,43 +24,43 @@
       >
         <template slot="items" slot-scope="props">
           <tr class="narrow" @click="props.expanded = !props.expanded">
-            <td>{{ props.item.rank }}</td>
+            <td>{{ props.item.cmc_rank }}</td>
             <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
             <td class="textLeft">{{ props.item.symbol }}</td>
-            <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
-            <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
-            <td v-if="props.item.quotes.USD.percent_change_1h">
+            <td class="hidden-xs-only">${{ props.item.quote.USD.price }}</td>
+            <td class="hidden-xs-only">{{ props.item.quote.USD.price }}€</td>
+            <td v-if="props.item.quote.USD.percent_change_1h">
               <span
                 :class="{
-                  positive: props.item.quotes.USD.percent_change_1h > 0,
-                  negative: props.item.quotes.USD.percent_change_1h < 0
+                  positive: props.item.quote.USD.percent_change_1h > 0,
+                  negative: props.item.quote.USD.percent_change_1h < 0
                 }"
-                >{{ props.item.quotes.USD.percent_change_1h }}%</span
+                >{{ props.item.quote.USD.percent_change_1h }}%</span
               >
             </td>
             <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.percent_change_24h">
+            <td v-if="props.item.quote.USD.percent_change_24h">
               <span
                 :class="{
-                  positive: props.item.quotes.USD.percent_change_24h > 0,
-                  negative: props.item.quotes.USD.percent_change_24h < 0
+                  positive: props.item.quote.USD.percent_change_24h > 0,
+                  negative: props.item.quote.USD.percent_change_24h < 0
                 }"
-                >{{ props.item.quotes.USD.percent_change_24h }}%</span
+                >{{ props.item.quote.USD.percent_change_24h }}%</span
               >
             </td>
             <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.percent_change_7d">
+            <td v-if="props.item.quote.USD.percent_change_7d">
               <span
                 :class="{
-                  positive: props.item.quotes.USD.percent_change_7d > 0,
-                  negative: props.item.quotes.USD.percent_change_7d < 0
+                  positive: props.item.quote.USD.percent_change_7d > 0,
+                  negative: props.item.quote.USD.percent_change_7d < 0
                 }"
-                >{{ props.item.quotes.USD.percent_change_7d }}%</span
+                >{{ props.item.quote.USD.percent_change_7d }}%</span
               >
             </td>
             <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.market_cap" class="hidden-xs-only">
-              ${{ props.item.quotes.USD.market_cap }}
+            <td v-if="props.item.quote.USD.market_cap" class="hidden-xs-only">
+              ${{ props.item.quote.USD.market_cap }}
             </td>
             <td v-else>0</td>
           </tr>
@@ -70,16 +70,16 @@
             <p><span class="bold">Name:</span> {{ props.item.name }}</p>
             <p>
               <span class="bold">Price USD:</span> ${{
-                props.item.quotes.USD.price
+                props.item.quote.USD.price
               }}
             </p>
             <p>
               <span class="bold">Price EUR:</span>
-              {{ props.item.quotes.EUR.price }}€
+              {{ props.item.quote.USD.price }}€
             </p>
-            <p v-if="props.item.quotes.USD.market_cap">
+            <p v-if="props.item.quote.USD.market_cap">
               <span class="bold">Market Cap:</span> ${{
-                props.item.quotes.USD.market_cap
+                props.item.quote.USD.market_cap
               }}
             </p>
             <p v-else><span class="bold">Market Cap:</span> 0</p>
@@ -91,25 +91,18 @@
 </template>
 
 <script>
-import axios from "axios";
-
-const api_key = process.env.VUE_APP_API_KEY;
-const fullURL =
-  "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-const headers = { "X-CMC_PRO_API_KEY": api_key };
-
 export default {
   data() {
     return {
       pagination: {
-        sortBy: "rank"
+        sortBy: "cmc_rank"
       },
       headers: [
         {
           text: "#",
           align: "center",
           sortable: true,
-          value: "rank"
+          value: "cmc_rank"
         },
         {
           text: "Name",
@@ -123,34 +116,34 @@ export default {
         {
           text: "Price $",
           align: "right",
-          value: "quotes.USD.price",
+          value: "quote.USD.price",
           class: "hidden-xs-only"
         },
         {
           text: "Price €",
           align: "right",
-          value: "quotes.EUR.price",
+          value: "quote.USD.price",
           class: "hidden-xs-only"
         },
         {
           text: "1h",
           align: "center",
-          value: "quotes.USD.percent_change_1h"
+          value: "quote.USD.percent_change_1h"
         },
         {
           text: "24h",
           align: "center",
-          value: "quotes.USD.percent_change_24h"
+          value: "quote.USD.percent_change_24h"
         },
         {
           text: "7d",
           align: "center",
-          value: "quotes.USD.percent_change_7d"
+          value: "quote.USD.percent_change_7d"
         },
         {
           text: "Market Cap",
           align: "right",
-          value: "quotes.USD.market_cap",
+          value: "quote.USD.market_cap",
           class: "hidden-xs-only"
         }
       ],
@@ -172,7 +165,9 @@ export default {
      }
   },*/
   mounted() {
-    axios
+    this.callLambda();
+    // this.errored = true;
+    /*axios
       .get(fullURL, { headers: headers })
       .then(response => {
         this.info = Object.values(response.data.data);
@@ -181,7 +176,25 @@ export default {
         console.log(error);
         this.errored = true;
       })
-      .finally(() => (this.loading = false));
+      .finally(() => (this.loading = false));*/
+  },
+  methods: {
+    /* callLambda() {
+      fetch("/.netlify/functions/hello")
+        .then(response => console.log(response))
+        .then(json => {
+          this.lambdaMsg = json.msg;
+        });
+    },*/
+    callLambda() {
+      fetch("/.netlify/functions/callAPI")
+        .then(response => response.json())
+        .then(json => {
+          this.info = json.data;
+          console.log(this.info);
+          this.loading = false;
+        });
+    }
   }
 };
 </script>
