@@ -11,7 +11,7 @@ const requestOptions = {
 export async function handler() {
   try {
     const response = await fetch(
-      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
+      "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=5000",
       requestOptions
     );
     if (!response.ok) {
