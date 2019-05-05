@@ -24,49 +24,43 @@
       >
         <template slot="items" slot-scope="props">
           <tr class="narrow" @click="props.expanded = !props.expanded">
-            <td>{{ props.item.cmc_rank }}</td>
+            <td>{{ props.item.rank }}</td>
             <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
             <td class="textLeft">{{ props.item.symbol }}</td>
-            <td class="hidden-xs-only">${{ props.item.quote.USD.price }}</td>
-            <!--            <td class="hidden-xs-only">{{ props.item.quote.USD.price }}€</td>-->
-            <td v-if="props.item.quote.USD.percent_change_1h">
+            <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
+            <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
+            <td v-if="props.item.quotes.USD.percent_change_1h">
               <span
                 :class="{
-                  positive: props.item.quote.USD.percent_change_1h > 0,
-                  negative: props.item.quote.USD.percent_change_1h < 0
+                  positive: props.item.quotes.USD.percent_change_1h > 0,
+                  negative: props.item.quotes.USD.percent_change_1h < 0
                 }"
-                >{{
-                  currencydecimal(props.item.quote.USD.percent_change_1h)
-                }}%</span
+                >{{ props.item.quotes.USD.percent_change_1h }}%</span
               >
             </td>
             <td v-else>0%</td>
-            <td v-if="props.item.quote.USD.percent_change_24h">
+            <td v-if="props.item.quotes.USD.percent_change_24h">
               <span
                 :class="{
-                  positive: props.item.quote.USD.percent_change_24h > 0,
-                  negative: props.item.quote.USD.percent_change_24h < 0
+                  positive: props.item.quotes.USD.percent_change_24h > 0,
+                  negative: props.item.quotes.USD.percent_change_24h < 0
                 }"
-                >{{
-                  currencydecimal(props.item.quote.USD.percent_change_24h)
-                }}%</span
+                >{{ props.item.quotes.USD.percent_change_24h }}%</span
               >
             </td>
             <td v-else>0%</td>
-            <td v-if="props.item.quote.USD.percent_change_7d">
+            <td v-if="props.item.quotes.USD.percent_change_7d">
               <span
                 :class="{
-                  positive: props.item.quote.USD.percent_change_7d > 0,
-                  negative: props.item.quote.USD.percent_change_7d < 0
+                  positive: props.item.quotes.USD.percent_change_7d > 0,
+                  negative: props.item.quotes.USD.percent_change_7d < 0
                 }"
-                >{{
-                  currencydecimal(props.item.quote.USD.percent_change_7d)
-                }}%</span
+                >{{ props.item.quotes.USD.percent_change_7d }}%</span
               >
             </td>
             <td v-else>0%</td>
-            <td v-if="props.item.quote.USD.market_cap" class="hidden-xs-only">
-              ${{ props.item.quote.USD.market_cap.toFixed(0) }}
+            <td v-if="props.item.quotes.USD.market_cap" class="hidden-xs-only">
+              ${{ props.item.quotes.USD.market_cap }}
             </td>
             <td v-else>0</td>
           </tr>
@@ -76,16 +70,16 @@
             <p><span class="bold">Name:</span> {{ props.item.name }}</p>
             <p>
               <span class="bold">Price USD:</span> ${{
-                props.item.quote.USD.price
+                props.item.quotes.USD.price
               }}
             </p>
-            <!--<p>
+            <p>
               <span class="bold">Price EUR:</span>
-              {{ props.item.quote.USD.price }}€
-            </p>-->
-            <p v-if="props.item.quote.USD.market_cap">
+              {{ props.item.quotes.EUR.price }}€
+            </p>
+            <p v-if="props.item.quotes.USD.market_cap">
               <span class="bold">Market Cap:</span> ${{
-                props.item.quote.USD.market_cap.toFixed(0)
+                props.item.quotes.USD.market_cap
               }}
             </p>
             <p v-else><span class="bold">Market Cap:</span> 0</p>
@@ -97,18 +91,20 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       pagination: {
-        sortBy: "cmc_rank"
+        sortBy: "rank"
       },
       headers: [
         {
           text: "#",
           align: "center",
           sortable: true,
-          value: "cmc_rank"
+          value: "rank"
         },
         {
           text: "Name",
@@ -122,34 +118,34 @@ export default {
         {
           text: "Price $",
           align: "right",
-          value: "quote.USD.price",
+          value: "quotes.USD.price",
           class: "hidden-xs-only"
         },
-        /*        {
+        {
           text: "Price €",
           align: "right",
-          value: "quote.USD.price",
+          value: "quotes.EUR.price",
           class: "hidden-xs-only"
-        },*/
+        },
         {
           text: "1h",
           align: "center",
-          value: "quote.USD.percent_change_1h"
+          value: "quotes.USD.percent_change_1h"
         },
         {
           text: "24h",
           align: "center",
-          value: "quote.USD.percent_change_24h"
+          value: "quotes.USD.percent_change_24h"
         },
         {
           text: "7d",
           align: "center",
-          value: "quote.USD.percent_change_7d"
+          value: "quotes.USD.percent_change_7d"
         },
         {
           text: "Market Cap",
           align: "right",
-          value: "quote.USD.market_cap",
+          value: "quotes.USD.market_cap",
           class: "hidden-xs-only"
         }
       ],
@@ -166,47 +162,21 @@ export default {
     };
   },
   /*  filters: {
-     currencydecimal(value) {
-       return value.toFixed(2);
-     }
+    currencydecimal(value) {
+      return value.toFixed(2);
+    }
   },*/
   mounted() {
-    this.callLambda();
-    // this.errored = true;
-    /*axios
-      .get(fullURL, { headers: headers })
+    axios
+      .get("https://api.coinpaprika.com/v1/tickers?quotes=usd,eur")
       .then(response => {
-        this.info = Object.values(response.data.data);
+        this.info = response.data;
       })
       .catch(error => {
         console.log(error);
         this.errored = true;
       })
-      .finally(() => (this.loading = false));*/
-  },
-  methods: {
-    currencydecimal(value) {
-      return value.toFixed(2);
-    },
-    /* callLambda() {
-      fetch("/.netlify/functions/hello")
-        .then(response => console.log(response))
-        .then(json => {
-          this.lambdaMsg = json.msg;
-        });
-    },*/
-    callLambda() {
-      fetch("/.netlify/functions/callAPI")
-        .then(response => response.json())
-        .then(json => {
-          this.info = json.data;
-          /*this.info.quote.USD.percent_change_7d = this.currencydecimal(
-            this.info.quote.USD.percent_change_7d
-          );*/
-          console.log(this.info);
-          this.loading = false;
-        });
-    }
+      .finally(() => (this.loading = false));
   }
 };
 </script>
