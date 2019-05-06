@@ -179,7 +179,6 @@ export default {
     axios
       .get("https://api.coinpaprika.com/v1/tickers?quotes=usd,eur")
       .then(response => {
-        console.log(response.data);
         this.info = response.data;
       })
       .catch(error => {
