@@ -83,6 +83,14 @@
               }}
             </p>
             <p v-else><span class="bold">Market Cap:</span> 0</p>
+            <p>
+              <span class="bold">All-time-High:</span>
+              ${{ props.item.quotes.USD.ath_price }}
+            </p>
+            <p>
+              <span class="bold">Date of ATH:</span>
+              {{ formatDate(props.item.quotes.USD.ath_date) }}
+            </p>
           </v-card>
         </template>
       </v-data-table>
@@ -154,9 +162,10 @@ export default {
       errored: false,
       search: "",
       rowsPerPageItems: [
-        10,
         25,
         50,
+        100,
+        500,
         { text: "$vuetify.dataIterator.rowsPerPageAll", value: -1 }
       ]
     };
@@ -170,6 +179,7 @@ export default {
     axios
       .get("https://api.coinpaprika.com/v1/tickers?quotes=usd,eur")
       .then(response => {
+        console.log(response.data);
         this.info = response.data;
       })
       .catch(error => {
@@ -177,6 +187,12 @@ export default {
         this.errored = true;
       })
       .finally(() => (this.loading = false));
+  },
+  methods: {
+    formatDate(date) {
+      const newDate = new Date(date);
+      return `${newDate.getMonth()}.${newDate.getDate()}.${newDate.getFullYear()}`;
+    }
   }
 };
 </script>
