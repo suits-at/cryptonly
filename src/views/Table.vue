@@ -27,8 +27,22 @@
             <td>{{ props.item.rank }}</td>
             <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
             <td class="textLeft">{{ props.item.symbol }}</td>
-            <td class="hidden-xs-only">${{ props.item.quotes.USD.price }}</td>
-            <td class="hidden-xs-only">{{ props.item.quotes.EUR.price }}€</td>
+            <td class="hidden-xs-only">
+              ${{
+                props.item.quotes.USD.price.toLocaleString("en-US", {
+                  minimumSignificantDigits: 2,
+                  maximumSignificantDigits: 6
+                })
+              }}
+            </td>
+            <td class="hidden-xs-only">
+              {{
+                props.item.quotes.EUR.price.toLocaleString("de-DE", {
+                  minimumSignificantDigits: 2,
+                  maximumSignificantDigits: 6
+                })
+              }}€
+            </td>
             <td v-if="props.item.quotes.USD.percent_change_1h">
               <span
                 :class="{
@@ -60,7 +74,7 @@
             </td>
             <td v-else>0%</td>
             <td v-if="props.item.quotes.USD.market_cap" class="hidden-xs-only">
-              ${{ props.item.quotes.USD.market_cap }}
+              ${{ props.item.quotes.USD.market_cap.toLocaleString("en-US") }}
             </td>
             <td v-else>0</td>
           </tr>
@@ -69,23 +83,36 @@
           <v-card flat class="pl-3 pt-3">
             <p><span class="bold">Name:</span> {{ props.item.name }}</p>
             <p>
-              <span class="bold">Price USD:</span> ${{
-                props.item.quotes.USD.price
+              <span class="bold">Price USD:</span>
+              ${{
+                props.item.quotes.USD.price.toLocaleString("en-US", {
+                  minimumSignificantDigits: 2,
+                  maximumSignificantDigits: 6
+                })
               }}
             </p>
             <p>
               <span class="bold">Price EUR:</span>
-              {{ props.item.quotes.EUR.price }}€
+              {{
+                props.item.quotes.EUR.price.toLocaleString("de-DE", {
+                  minimumSignificantDigits: 2,
+                  maximumSignificantDigits: 6
+                })
+              }}€
             </p>
             <p v-if="props.item.quotes.USD.market_cap">
-              <span class="bold">Market Cap:</span> ${{
-                props.item.quotes.USD.market_cap
-              }}
+              <span class="bold">Market Cap:</span>
+              ${{ props.item.quotes.USD.market_cap.toLocaleString("en-US") }}
             </p>
             <p v-else><span class="bold">Market Cap:</span> 0</p>
             <p>
               <span class="bold">All-time-High:</span>
-              ${{ props.item.quotes.USD.ath_price }}
+              ${{
+                props.item.quotes.USD.ath_price.toLocaleString("en-US", {
+                  minimumSignificantDigits: 2,
+                  maximumSignificantDigits: 6
+                })
+              }}
             </p>
             <p>
               <span class="bold">Date of ATH:</span>
@@ -171,10 +198,10 @@ export default {
     };
   },
   /*  filters: {
-    currencydecimal(value) {
-      return value.toFixed(2);
-    }
-  },*/
+      currencydecimal(value) {
+        return value.toFixed(2);
+      }
+    },*/
   mounted() {
     axios
       .get("https://api.coinpaprika.com/v1/tickers?quotes=usd,eur")
@@ -239,6 +266,7 @@ th:nth-child(8) {
 .bold {
   font-weight: bold;
 }
+
 .v-card {
   p {
     text-align: left;
