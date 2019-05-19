@@ -1,5 +1,5 @@
 <template>
-  <section class="about">
+  <section class="profile">
     <ComingSoon />
   </section>
 </template>

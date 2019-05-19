@@ -78,7 +78,7 @@
           shift
         >
           <v-btn dark to="/">
-            <span>Overview</span>
+            <span>Ticker</span>
             <v-icon>fas fa-home</v-icon>
           </v-btn>
 
