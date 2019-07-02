@@ -3,7 +3,8 @@
 ![David](https://img.shields.io/david/suits-at/cryptonly.svg)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/suits-at/cryptonly.svg)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsuits-at%2Fcryptonly.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsuits-at%2Fcryptonly?ref=badge_shield)
+
 
 # [cryptonly](https://cryptonly.suits.at)
 
@@ -30,3 +31,7 @@ npm run build
 ```
 npm run lint
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsuits-at%2Fcryptonly.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsuits-at%2Fcryptonly?ref=badge_large)
