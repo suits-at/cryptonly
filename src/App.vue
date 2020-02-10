@@ -5,6 +5,21 @@
         <v-list>
           <v-list-tile>
             <v-list-tile-action>
+              <v-btn icon to="/top100">
+                <v-icon color="teal">fas fa-trophy</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title
+                ><router-link to="/top100"
+                  >Top 100</router-link
+                ></v-list-tile-title
+              >
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-divider></v-divider>
+          <v-list-tile>
+            <v-list-tile-action>
               <v-btn icon to="/profile">
                 <v-icon color="teal">fas fa-user-circle</v-icon>
               </v-btn>

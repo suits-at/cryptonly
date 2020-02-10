@@ -45,6 +45,12 @@ export default new Router({
       name: "portfolio",
       component: () =>
         import(/* webpackChunkName: "portfolio" */ "./views/Portfolio.vue")
+    },
+    {
+      path: "/top100",
+      name: "top100",
+      component: () =>
+        import(/* webpackChunkName: "portfolio" */ "./views/Top100.vue")
     }
   ]
 });
