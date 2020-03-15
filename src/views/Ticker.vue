@@ -6,7 +6,7 @@
       help as well.
     </p>
   </section>
-  <section v-else>
+  <section v-else class="text-center">
     <v-progress-circular v-if="loading" indeterminate color="primary" />
     <section v-else>
       <v-text-field
@@ -20,7 +20,7 @@
         :headers="headers"
         :items="info"
         :search="search"
-        :rows-per-page-items="rowsPerPageItems"
+        :mobile-breakpoint="320"
       >
         <template slot="items" slot-scope="props">
           <tr class="narrow" @click="props.expanded = !props.expanded">

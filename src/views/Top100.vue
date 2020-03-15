@@ -16,16 +16,13 @@
         hide-details
         append-icon="fa-search"
       />
-      <v-data-table
-        :headers="headers"
-        :items="info"
-        :search="search"
-        :rows-per-page-items="rowsPerPageItems"
-      >
+      <v-data-table :headers="headers" :items="info" :search="search">
         <template slot="items" slot-scope="props">
           <tr class="narrow" @click="props.expanded = !props.expanded">
             <td>{{ props.item.rank }}</td>
-            <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
+            <td class="textLeft hidden-xs-only">
+              {{ props.item.name }} 123123
+            </td>
             <td class="textLeft">{{ props.item.symbol }}</td>
             <td class="hidden-xs-only">
               ${{
@@ -204,7 +201,6 @@ export default {
           return a.rank - b.rank;
         });
         this.info = this.info.slice(0, 100);
-        console.log(this.info);
       })
       .catch(error => {
         console.log(error);

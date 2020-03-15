@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text-center">
     <h1>more coming soon</h1>
     <p>
       made with <v-icon>fas fa-heart fa-1x</v-icon> by
