@@ -5,7 +5,7 @@
       made with <v-icon>fas fa-heart fa-1x</v-icon> by
       <a href="https://www.suits.at">SUITS</a>
       <v-spacer />
-      &copy; 2019
+      &copy; 2020
     </p>
     <router-link to="/">
       <v-btn to="/">
