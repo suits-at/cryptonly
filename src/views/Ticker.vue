@@ -20,9 +20,57 @@
         :headers="headers"
         :items="info"
         :search="search"
+        sortBy="rank"
         :mobile-breakpoint="320"
+        :items-per-page="25"
       >
-        <template slot="items" slot-scope="props">
+        <template v-slot:item.quotes.USD.percent_change_1h="{ item }">
+          <span
+            :class="{
+              positive: item.quotes.USD.percent_change_1h > 0,
+              negative: item.quotes.USD.percent_change_1h < 0
+            }"
+            >{{ item.quotes.USD.percent_change_1h }}%</span
+          >
+        </template>
+        <template v-slot:item.quotes.USD.percent_change_24h="{ item }">
+          <span
+            :class="{
+              positive: item.quotes.USD.percent_change_24h > 0,
+              negative: item.quotes.USD.percent_change_24h < 0
+            }"
+            >{{ item.quotes.USD.percent_change_24h }}%</span
+          >
+        </template>
+        <template v-slot:item.quotes.USD.percent_change_7d="{ item }">
+          <span
+            :class="{
+              positive: item.quotes.USD.percent_change_7d > 0,
+              negative: item.quotes.USD.percent_change_7d < 0
+            }"
+            >{{ item.quotes.USD.percent_change_7d }}%</span
+          >
+        </template>
+        <template v-slot:item.quotes.USD.price="{ item }">
+          ${{
+            item.quotes.USD.price.toLocaleString("en-US", {
+              minimumSignificantDigits: 2,
+              maximumSignificantDigits: 6
+            })
+          }}
+        </template>
+        <template v-slot:item.quotes.EUR.price="{ item }">
+          ${{
+            item.quotes.EUR.price.toLocaleString("en-US", {
+              minimumSignificantDigits: 2,
+              maximumSignificantDigits: 6
+            })
+          }}
+        </template>
+        <template v-slot:item.quotes.USD.market_cap="{ item }">
+          ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
+        </template>
+        <!--<template slot="items" slot-scope="props">
           <tr class="narrow" @click="props.expanded = !props.expanded">
             <td>{{ props.item.rank }}</td>
             <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
@@ -78,8 +126,8 @@
             </td>
             <td v-else>0</td>
           </tr>
-        </template>
-        <template slot="expand" slot-scope="props">
+        </template>-->
+        <!--     <template slot="expand" slot-scope="props">
           <v-card flat class="pl-3 pt-3">
             <p><span class="bold">Name:</span> {{ props.item.name }}</p>
             <p>
@@ -119,7 +167,7 @@
               {{ formatDate(props.item.quotes.USD.ath_date) }}
             </p>
           </v-card>
-        </template>
+        </template>-->
       </v-data-table>
     </section>
   </section>
@@ -131,9 +179,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      pagination: {
-        sortBy: "rank"
-      },
       headers: [
         {
           text: "#",

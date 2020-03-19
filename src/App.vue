@@ -81,12 +81,12 @@
           <router-view />
         </v-container>
       </v-content>
-      <v-footer app color="teal"
+      <v-footer app color="teal" padless
         ><v-bottom-navigation
           v-model="bottomNav"
           :background-color="color"
-          absolute
           shift
+          app
         >
           <v-btn to="/">
             <span class="white--text">Ticker</span>
