@@ -22,152 +22,122 @@
         :search="search"
         sortBy="rank"
         :mobile-breakpoint="320"
-        :items-per-page="25"
+        dense
       >
-        <template v-slot:item.quotes.USD.percent_change_1h="{ item }">
-          <span
-            :class="{
-              positive: item.quotes.USD.percent_change_1h > 0,
-              negative: item.quotes.USD.percent_change_1h < 0
-            }"
-            >{{ item.quotes.USD.percent_change_1h }}%</span
-          >
-        </template>
-        <template v-slot:item.quotes.USD.percent_change_24h="{ item }">
-          <span
-            :class="{
-              positive: item.quotes.USD.percent_change_24h > 0,
-              negative: item.quotes.USD.percent_change_24h < 0
-            }"
-            >{{ item.quotes.USD.percent_change_24h }}%</span
-          >
-        </template>
-        <template v-slot:item.quotes.USD.percent_change_7d="{ item }">
-          <span
-            :class="{
-              positive: item.quotes.USD.percent_change_7d > 0,
-              negative: item.quotes.USD.percent_change_7d < 0
-            }"
-            >{{ item.quotes.USD.percent_change_7d }}%</span
-          >
-        </template>
-        <template v-slot:item.quotes.USD.price="{ item }">
-          ${{
-            item.quotes.USD.price.toLocaleString("en-US", {
-              minimumSignificantDigits: 2,
-              maximumSignificantDigits: 6
-            })
-          }}
-        </template>
-        <template v-slot:item.quotes.EUR.price="{ item }">
-          ${{
-            item.quotes.EUR.price.toLocaleString("en-US", {
-              minimumSignificantDigits: 2,
-              maximumSignificantDigits: 6
-            })
-          }}
-        </template>
-        <template v-slot:item.quotes.USD.market_cap="{ item }">
-          ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
-        </template>
-        <!--<template slot="items" slot-scope="props">
-          <tr class="narrow" @click="props.expanded = !props.expanded">
-            <td>{{ props.item.rank }}</td>
-            <td class="textLeft hidden-xs-only">{{ props.item.name }}</td>
-            <td class="textLeft">{{ props.item.symbol }}</td>
-            <td class="hidden-xs-only">
-              ${{
-                props.item.quotes.USD.price.toLocaleString("en-US", {
-                  minimumSignificantDigits: 2,
-                  maximumSignificantDigits: 6
-                })
-              }}
-            </td>
-            <td class="hidden-xs-only">
-              {{
-                props.item.quotes.EUR.price.toLocaleString("de-DE", {
-                  minimumSignificantDigits: 2,
-                  maximumSignificantDigits: 6
-                })
-              }}€
-            </td>
-            <td v-if="props.item.quotes.USD.percent_change_1h">
-              <span
-                :class="{
-                  positive: props.item.quotes.USD.percent_change_1h > 0,
-                  negative: props.item.quotes.USD.percent_change_1h < 0
-                }"
-                >{{ props.item.quotes.USD.percent_change_1h }}%</span
+        <template v-slot:body="{ items }">
+          <tbody>
+            <template v-for="item in items">
+              <tr
+                class="cursor-pointer"
+                :key="item.name"
+                @click="setExpanded(item.name)"
               >
-            </td>
-            <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.percent_change_24h">
-              <span
-                :class="{
-                  positive: props.item.quotes.USD.percent_change_24h > 0,
-                  negative: props.item.quotes.USD.percent_change_24h < 0
-                }"
-                >{{ props.item.quotes.USD.percent_change_24h }}%</span
-              >
-            </td>
-            <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.percent_change_7d">
-              <span
-                :class="{
-                  positive: props.item.quotes.USD.percent_change_7d > 0,
-                  negative: props.item.quotes.USD.percent_change_7d < 0
-                }"
-                >{{ props.item.quotes.USD.percent_change_7d }}%</span
-              >
-            </td>
-            <td v-else>0%</td>
-            <td v-if="props.item.quotes.USD.market_cap" class="hidden-xs-only">
-              ${{ props.item.quotes.USD.market_cap.toLocaleString("en-US") }}
-            </td>
-            <td v-else>0</td>
-          </tr>
-        </template>-->
-        <!--     <template slot="expand" slot-scope="props">
-          <v-card flat class="pl-3 pt-3">
-            <p><span class="bold">Name:</span> {{ props.item.name }}</p>
-            <p>
-              <span class="bold">Price USD:</span>
-              ${{
-                props.item.quotes.USD.price.toLocaleString("en-US", {
-                  minimumSignificantDigits: 2,
-                  maximumSignificantDigits: 6
-                })
-              }}
-            </p>
-            <p>
-              <span class="bold">Price EUR:</span>
-              {{
-                props.item.quotes.EUR.price.toLocaleString("de-DE", {
-                  minimumSignificantDigits: 2,
-                  maximumSignificantDigits: 6
-                })
-              }}€
-            </p>
-            <p v-if="props.item.quotes.USD.market_cap">
-              <span class="bold">Market Cap:</span>
-              ${{ props.item.quotes.USD.market_cap.toLocaleString("en-US") }}
-            </p>
-            <p v-else><span class="bold">Market Cap:</span> 0</p>
-            <p>
-              <span class="bold">All-time-High:</span>
-              ${{
-                props.item.quotes.USD.ath_price.toLocaleString("en-US", {
-                  minimumSignificantDigits: 2,
-                  maximumSignificantDigits: 6
-                })
-              }}
-            </p>
-            <p>
-              <span class="bold">Date of ATH:</span>
-              {{ formatDate(props.item.quotes.USD.ath_date) }}
-            </p>
-          </v-card>
-        </template>-->
+                <td class="text-center">{{ item.rank }}</td>
+                <td class="text-left hidden-xs-only">{{ item.name }}</td>
+                <td class="text-left">{{ item.symbol }}</td>
+                <td class="hidden-xs-only">
+                  ${{
+                    item.quotes.USD.price.toLocaleString("en-US", {
+                      minimumSignificantDigits: 2,
+                      maximumSignificantDigits: 6
+                    })
+                  }}
+                </td>
+                <td class="hidden-xs-only">
+                  {{
+                    item.quotes.EUR.price.toLocaleString("de-DE", {
+                      minimumSignificantDigits: 2,
+                      maximumSignificantDigits: 6
+                    })
+                  }}€
+                </td>
+                <td v-if="item.quotes.USD.percent_change_1h">
+                  <span
+                    :class="{
+                      positive: item.quotes.USD.percent_change_1h > 0,
+                      negative: item.quotes.USD.percent_change_1h < 0
+                    }"
+                    >{{ item.quotes.USD.percent_change_1h }}%</span
+                  >
+                </td>
+                <td v-else>0%</td>
+                <td v-if="item.quotes.USD.percent_change_24h">
+                  <span
+                    :class="{
+                      positive: item.quotes.USD.percent_change_24h > 0,
+                      negative: item.quotes.USD.percent_change_24h < 0
+                    }"
+                    >{{ item.quotes.USD.percent_change_24h }}%</span
+                  >
+                </td>
+                <td v-else>0%</td>
+                <td v-if="item.quotes.USD.percent_change_7d">
+                  <span
+                    :class="{
+                      positive: item.quotes.USD.percent_change_7d > 0,
+                      negative: item.quotes.USD.percent_change_7d < 0
+                    }"
+                    >{{ item.quotes.USD.percent_change_7d }}%</span
+                  >
+                </td>
+                <td v-else>0%</td>
+                <td v-if="item.quotes.USD.market_cap" class="hidden-xs-only">
+                  ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
+                </td>
+                <td v-else class="hidden-xs-only">0</td>
+              </tr>
+              <tr :key="`${item.name}-expanded`" v-if="expanded === item.name">
+                <td colspan="9" class="text-left">
+                  <v-card flat class="dense pt-3 pl-2">
+                    <p>
+                      <span class="font-weight-bold">Name:</span>
+                      {{ item.name }}
+                    </p>
+                    <p>
+                      <span class="font-weight-bold">Price USD:</span>
+                      ${{
+                        item.quotes.USD.price.toLocaleString("en-US", {
+                          minimumSignificantDigits: 2,
+                          maximumSignificantDigits: 6
+                        })
+                      }}
+                    </p>
+                    <p>
+                      <span class="font-weight-bold">Price EUR:</span>
+                      {{
+                        item.quotes.EUR.price.toLocaleString("de-DE", {
+                          minimumSignificantDigits: 2,
+                          maximumSignificantDigits: 6
+                        })
+                      }}€
+                    </p>
+                    <p v-if="item.quotes.USD.market_cap">
+                      <span class="font-weight-bold">Market Cap:</span>
+                      ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
+                    </p>
+                    <p v-else>
+                      <span class="font-weight-bold">Market Cap:</span> 0
+                    </p>
+                    <p>
+                      <span class="font-weight-bold">All-time-High:</span>
+                      ${{
+                        item.quotes.USD.ath_price.toLocaleString("en-US", {
+                          minimumSignificantDigits: 2,
+                          maximumSignificantDigits: 6
+                        })
+                      }}
+                    </p>
+                    <p>
+                      <span class="font-weight-bold">Date of ATH:</span>
+                      {{ formatDate(item.quotes.USD.ath_date) }}
+                    </p>
+                  </v-card>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </template>
+        <!-- :items-per-page="25"-->
       </v-data-table>
     </section>
   </section>
@@ -209,17 +179,17 @@ export default {
         },
         {
           text: "1h",
-          align: "center",
+          align: "right",
           value: "quotes.USD.percent_change_1h"
         },
         {
           text: "24h",
-          align: "center",
+          align: "right",
           value: "quotes.USD.percent_change_24h"
         },
         {
           text: "7d",
-          align: "center",
+          align: "right",
           value: "quotes.USD.percent_change_7d"
         },
         {
@@ -233,6 +203,7 @@ export default {
       loading: true,
       errored: false,
       search: "",
+      expanded: false,
       rowsPerPageItems: [
         25,
         50,
@@ -264,6 +235,13 @@ export default {
       const newDate = new Date(date);
       return `${newDate.getDate()}.${newDate.getMonth() +
         1}.${newDate.getFullYear()}`;
+    },
+    setExpanded(item) {
+      if (this.expanded === item) {
+        this.expanded = false;
+      } else {
+        this.expanded = item;
+      }
     }
   }
 };
@@ -281,40 +259,12 @@ tr {
   text-align: right;
 }
 
-/*overwrite td styling from vuetify*/
-table.v-table thead td:not(:nth-child(1)),
-table.v-table tbody td:not(:nth-child(1)),
-table.v-table thead th:not(:nth-child(1)),
-table.v-table tbody th:not(:nth-child(1)),
-table.v-table thead td:first-child,
-table.v-table tbody td:first-child,
-table.v-table thead th:first-child,
-table.v-table tbody th:first-child {
-  padding: 0 16px;
+.v-data-table--dense th,
+.v-data-table--dense td {
+  height: 40px !important;
 }
 
-td:nth-child(2),
-td:nth-child(3),
-th:nth-child(2),
-th:nth-child(3) {
-  text-align: left;
-}
-
-td:nth-child(1),
-th:nth-child(1),
-th:nth-child(6),
-th:nth-child(7),
-th:nth-child(8) {
-  text-align: center;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.v-card {
-  p {
-    text-align: left;
-  }
+.v-card.dense p {
+  margin-bottom: 10px;
 }
 </style>
