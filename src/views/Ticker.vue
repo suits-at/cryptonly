@@ -21,16 +21,19 @@
         :items="info"
         :search="search"
         sortBy="rank"
-        :mobile-breakpoint="320"
+        :mobile-breakpoint="200"
         dense
+        :footer-props="{
+          itemsPerPageOptions: [25, 50, 100, 500, { text: 'all', value: -1 }]
+        }"
       >
         <template v-slot:body="{ items }">
           <tbody>
             <template v-for="item in items">
               <tr
                 class="cursor-pointer"
-                :key="item.name"
-                @click="setExpanded(item.name)"
+                :key="`${item.symbol}-${item.name}`"
+                @click="setExpanded(`${item.symbol}-${item.name}`)"
               >
                 <td class="text-center">{{ item.rank }}</td>
                 <td class="text-left hidden-xs-only">{{ item.name }}</td>
@@ -86,58 +89,58 @@
                 </td>
                 <td v-else class="hidden-xs-only">0</td>
               </tr>
-              <tr :key="`${item.name}-expanded`" v-if="expanded === item.name">
-                <td colspan="9" class="text-left">
-                  <v-card flat class="dense pt-3 pl-2">
-                    <p>
-                      <span class="font-weight-bold">Name:</span>
-                      {{ item.name }}
-                    </p>
-                    <p>
-                      <span class="font-weight-bold">Price USD:</span>
-                      ${{
-                        item.quotes.USD.price.toLocaleString("en-US", {
-                          minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
-                        })
-                      }}
-                    </p>
-                    <p>
-                      <span class="font-weight-bold">Price EUR:</span>
-                      {{
-                        item.quotes.EUR.price.toLocaleString("de-DE", {
-                          minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
-                        })
-                      }}€
-                    </p>
-                    <p v-if="item.quotes.USD.market_cap">
-                      <span class="font-weight-bold">Market Cap:</span>
-                      ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
-                    </p>
-                    <p v-else>
-                      <span class="font-weight-bold">Market Cap:</span> 0
-                    </p>
-                    <p>
-                      <span class="font-weight-bold">All-time-High:</span>
-                      ${{
-                        item.quotes.USD.ath_price.toLocaleString("en-US", {
-                          minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
-                        })
-                      }}
-                    </p>
-                    <p>
-                      <span class="font-weight-bold">Date of ATH:</span>
-                      {{ formatDate(item.quotes.USD.ath_date) }}
-                    </p>
-                  </v-card>
+              <tr
+                :key="`${item.symbol}-${item.name}-expanded`"
+                v-if="expanded === `${item.symbol}-${item.name}`"
+              >
+                <td colspan="9" class="text-left dense pt-3 pl-5 pl-lg-10">
+                  <p class="d-md-none">
+                    <span class="font-weight-bold">Name:</span>
+                    {{ item.name }}
+                  </p>
+                  <p class="d-md-none">
+                    <span class="font-weight-bold">Price USD:</span>
+                    ${{
+                      item.quotes.USD.price.toLocaleString("en-US", {
+                        minimumSignificantDigits: 2,
+                        maximumSignificantDigits: 6
+                      })
+                    }}
+                  </p>
+                  <p class="d-md-none">
+                    <span class="font-weight-bold">Price EUR:</span>
+                    {{
+                      item.quotes.EUR.price.toLocaleString("de-DE", {
+                        minimumSignificantDigits: 2,
+                        maximumSignificantDigits: 6
+                      })
+                    }}€
+                  </p>
+                  <p v-if="item.quotes.USD.market_cap" class="d-md-none">
+                    <span class="font-weight-bold">Market Cap:</span>
+                    ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
+                  </p>
+                  <p v-else class="d-md-none">
+                    <span class="font-weight-bold">Market Cap:</span> 0
+                  </p>
+                  <p>
+                    <span class="font-weight-bold">All-time-High:</span>
+                    ${{
+                      item.quotes.USD.ath_price.toLocaleString("en-US", {
+                        minimumSignificantDigits: 2,
+                        maximumSignificantDigits: 6
+                      })
+                    }}
+                  </p>
+                  <p>
+                    <span class="font-weight-bold">Date of ATH:</span>
+                    {{ formatDate(item.quotes.USD.ath_date) }}
+                  </p>
                 </td>
               </tr>
             </template>
           </tbody>
         </template>
-        <!-- :items-per-page="25"-->
       </v-data-table>
     </section>
   </section>
@@ -203,14 +206,7 @@ export default {
       loading: true,
       errored: false,
       search: "",
-      expanded: false,
-      rowsPerPageItems: [
-        25,
-        50,
-        100,
-        500,
-        { text: "$vuetify.dataIterator.rowsPerPageAll", value: -1 }
-      ]
+      expanded: false
     };
   },
   /*  filters: {
@@ -264,7 +260,12 @@ tr {
   height: 40px !important;
 }
 
-.v-card.dense p {
-  margin-bottom: 10px;
+td.dense p {
+  margin-bottom: 8px;
+}
+</style>
+<style lang="scss">
+.v-application--is-ltr .v-data-footer__select .v-select {
+  margin: 12px 0 12px 12px;
 }
 </style>
