@@ -210,7 +210,7 @@ export default {
   props: {
     errored: Boolean,
     loading: Boolean,
-    info: Object
+    info: Array
   },
   methods: {
     formatDate(date) {

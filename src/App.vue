@@ -76,11 +76,11 @@
           <v-icon>fab fa-github</v-icon>
         </v-btn>
       </v-app-bar>
-      <v-content>
+      <v-main>
         <v-container fluid>
           <router-view />
         </v-container>
-      </v-content>
+      </v-main>
       <v-footer app color="teal" padless
         ><v-bottom-navigation
           v-model="bottomNav"
