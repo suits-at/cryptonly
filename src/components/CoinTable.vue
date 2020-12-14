@@ -255,4 +255,16 @@ td.dense p {
 .v-application--is-ltr .v-data-footer__select .v-select {
   margin: 12px 0 12px 12px;
 }
+.v-application--is-ltr .v-data-footer__pagination {
+  margin: 0 10px 0 10px;
+}
+.v-data-footer {
+  justify-content: flex-start;
+}
+.v-application--is-ltr .v-data-footer__icons-before .v-btn:last-child {
+  margin-right: 0;
+}
+.v-application--is-ltr .v-data-footer__icons-after .v-btn:first-child {
+  margin-left: 0;
+}
 </style>
