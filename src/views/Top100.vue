@@ -1,14 +1,18 @@
 <template>
-  <CoinTable :errored="errored" :loading="loading" :info="info" />
+  <!--  <CoinTable :errored="errored" :loading="loading" :info="info" />-->
+  <section class="top100">
+    <ComingSoon />
+  </section>
 </template>
 
 <script>
 import axios from "axios";
-import CoinTable from "../components/CoinTable";
+// import CoinTable from "../components/CoinTable";
+import ComingSoon from "../components/ComingSoon";
 
 export default {
-  components: { CoinTable },
-  data() {
+  components: { ComingSoon }
+  /*  data() {
     return {
       loading: true,
       errored: false,
@@ -29,6 +33,6 @@ export default {
         this.errored = true;
       })
       .finally(() => (this.loading = false));
-  }
+  }*/
 };
 </script>

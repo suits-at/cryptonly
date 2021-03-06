@@ -205,13 +205,28 @@ export default {
         }
       ],
       search: "",
-      expanded: false
+      expanded: false,
+      loading: true,
+      errored: false,
+      info: null,
+      perPage: 100,
+      page: 1
     };
   },
-  props: {
-    errored: Boolean,
-    loading: Boolean,
-    info: Array
+  mounted() {
+    axios
+      .get(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
+      )
+      .then(response => {
+        console.log("get data", response.data);
+        this.info = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => (this.loading = false));
   },
   methods: {
     formatDate(date) {
@@ -229,7 +244,6 @@ export default {
   }
 };
 </script>
-
 <style lang="scss" scoped>
 .negative {
   color: red;
