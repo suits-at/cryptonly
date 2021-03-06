@@ -36,61 +36,73 @@
                   :key="`${item.symbol}-${item.name}`"
                   @click="setExpanded(`${item.symbol}-${item.name}`)"
                 >
-                  <td class="text-center">{{ item.rank }}</td>
+                  <td class="text-center">{{ item.market_cap_rank }}</td>
                   <td class="text-left hidden-xs-only">{{ item.name }}</td>
-                  <td class="text-left">{{ item.symbol }}</td>
+                  <td class="text-left uppercase">{{ item.symbol }}</td>
                   <td class="hidden-xs-only">
                     ${{
-                      item.quotes.USD.price.toLocaleString("en-US", {
+                      item.current_price.toLocaleString("en-US", {
                         minimumSignificantDigits: 2,
                         maximumSignificantDigits: 6
                       })
                     }}
                   </td>
-                  <td class="hidden-xs-only">
+                  <!--                  <td class="hidden-xs-only">
                     {{
                       item.quotes.EUR.price.toLocaleString("de-DE", {
                         minimumSignificantDigits: 2,
                         maximumSignificantDigits: 6
                       })
                     }}€
-                  </td>
-                  <td v-if="item.quotes.USD.percent_change_1h">
+                  </td>-->
+                  <td v-if="item.price_change_percentage_1h_in_currency">
                     <span
                       :class="{
-                        positive: item.quotes.USD.percent_change_1h > 0,
-                        negative: item.quotes.USD.percent_change_1h < 0
+                        positive:
+                          item.price_change_percentage_1h_in_currency > 0,
+                        negative:
+                          item.price_change_percentage_1h_in_currency < 0
                       }"
-                      >{{ item.quotes.USD.percent_change_1h }}%</span
+                      >{{
+                        item.price_change_percentage_1h_in_currency.toFixed(2)
+                      }}%</span
                     >
                   </td>
                   <td v-else>0%</td>
-                  <td v-if="item.quotes.USD.percent_change_24h">
+                  <td v-if="item.price_change_percentage_24h_in_currency">
                     <span
                       :class="{
-                        positive: item.quotes.USD.percent_change_24h > 0,
-                        negative: item.quotes.USD.percent_change_24h < 0
+                        positive:
+                          item.price_change_percentage_24h_in_currency > 0,
+                        negative:
+                          item.price_change_percentage_24h_in_currency < 0
                       }"
-                      >{{ item.quotes.USD.percent_change_24h }}%</span
+                      >{{
+                        item.price_change_percentage_24h_in_currency.toFixed(2)
+                      }}%</span
                     >
                   </td>
                   <td v-else>0%</td>
-                  <td v-if="item.quotes.USD.percent_change_7d">
+                  <td v-if="item.price_change_percentage_7d_in_currency">
                     <span
                       :class="{
-                        positive: item.quotes.USD.percent_change_7d > 0,
-                        negative: item.quotes.USD.percent_change_7d < 0
+                        positive:
+                          item.price_change_percentage_7d_in_currency > 0,
+                        negative:
+                          item.price_change_percentage_7d_in_currency < 0
                       }"
-                      >{{ item.quotes.USD.percent_change_7d }}%</span
+                      >{{
+                        item.price_change_percentage_7d_in_currency.toFixed(2)
+                      }}%</span
                     >
                   </td>
                   <td v-else>0%</td>
-                  <td v-if="item.quotes.USD.market_cap" class="hidden-xs-only">
-                    ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
+                  <td v-if="item.market_cap" class="hidden-xs-only">
+                    ${{ item.market_cap.toLocaleString("en-US") }}
                   </td>
                   <td v-else class="hidden-xs-only">0</td>
                 </tr>
-                <tr
+                <!--                <tr
                   :key="`${item.symbol}-${item.name}-expanded`"
                   v-if="expanded === `${item.symbol}-${item.name}`"
                 >
@@ -138,7 +150,7 @@
                       {{ formatDate(item.quotes.USD.ath_date) }}
                     </p>
                   </td>
-                </tr>
+                </tr>-->
               </template>
             </tbody>
           </template>
@@ -172,34 +184,23 @@ export default {
         {
           text: "Price $",
           align: "right",
-          value: "quotes.USD.price",
-          class: "hidden-xs-only"
-        },
-        {
-          text: "Price €",
-          align: "right",
-          value: "quotes.EUR.price",
           class: "hidden-xs-only"
         },
         {
           text: "1h",
-          align: "right",
-          value: "quotes.USD.percent_change_1h"
+          align: "right"
         },
         {
           text: "24h",
-          align: "right",
-          value: "quotes.USD.percent_change_24h"
+          align: "right"
         },
         {
           text: "7d",
-          align: "right",
-          value: "quotes.USD.percent_change_7d"
+          align: "right"
         },
         {
           text: "Market Cap",
           align: "right",
-          value: "quotes.USD.market_cap",
           class: "hidden-xs-only"
         }
       ],
@@ -266,5 +267,8 @@ td.dense p {
 }
 .v-application--is-ltr .v-data-footer__icons-after .v-btn:first-child {
   margin-left: 0;
+}
+.uppercase {
+  text-transform: uppercase;
 }
 </style>
