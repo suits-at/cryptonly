@@ -1,16 +1,15 @@
 <template>
   <div class="text-center">
-    <h1>more coming soon</h1>
-    <p>
-      made with <v-icon>fas fa-heart fa-1x</v-icon> by
-      <a href="https://www.suits.at">SUITS</a>
-      <v-spacer />
-      &copy; 2020
+    <h1 class="mb-8">coming soon...</h1>
+    <p class="mb-8">
+      made with <v-icon color="red">fas fa-heart fa-1x</v-icon> in Vienna by
+      <a href="https://www.suits.at" class="text-decoration-none">SUITS</a>
+      &copy; 2021
     </p>
-    <router-link to="/">
-      <v-btn to="/">
-        <span>back to&nbsp;</span>
-        <v-icon>fas fa-home</v-icon>
+    <router-link to="/" class="text-decoration-none">
+      <v-btn to="/" color="teal" class="white--text">
+        <span>back to</span>
+        <v-icon :right="true">fas fa-home</v-icon>
       </v-btn>
     </router-link>
   </div>
