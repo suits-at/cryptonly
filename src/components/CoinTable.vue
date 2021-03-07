@@ -21,11 +21,13 @@
           :headers="headers"
           :items="info"
           :search="search"
-          sortBy="rank"
+          sortBy="market_cap_rank"
           :mobile-breakpoint="200"
           dense
           :footer-props="{
-            itemsPerPageOptions: [25, 50, 100, 500, { text: 'all', value: -1 }]
+            itemsPerPageOptions: [100, 250, { text: 'all', value: -1 }],
+            disablePagination: !this.enablePagination,
+            disableItemsPerPage: !this.enablePagination
           }"
         >
           <template v-slot:body="{ items }">
@@ -40,21 +42,14 @@
                   <td class="text-left hidden-xs-only">{{ item.name }}</td>
                   <td class="text-left uppercase">{{ item.symbol }}</td>
                   <td class="hidden-xs-only">
-                    ${{
-                      item.current_price.toLocaleString("en-US", {
-                        minimumSignificantDigits: 2,
-                        maximumSignificantDigits: 6
-                      })
-                    }}
+                    <!--                    ${{
+                    item.current_price.toLocaleString("en-US", {
+                      minimumSignificantDigits: 2,
+                      maximumSignificantDigits: 6
+                    })
+                  }}-->
+                    ${{ item.current_price }}
                   </td>
-                  <!--                  <td class="hidden-xs-only">
-                    {{
-                      item.quotes.EUR.price.toLocaleString("de-DE", {
-                        minimumSignificantDigits: 2,
-                        maximumSignificantDigits: 6
-                      })
-                    }}€
-                  </td>-->
                   <td v-if="item.price_change_percentage_1h_in_currency">
                     <span
                       :class="{
@@ -102,7 +97,7 @@
                   </td>
                   <td v-else class="hidden-xs-only">0</td>
                 </tr>
-                <!--                <tr
+                <tr
                   :key="`${item.symbol}-${item.name}-expanded`"
                   v-if="expanded === `${item.symbol}-${item.name}`"
                 >
@@ -112,26 +107,12 @@
                       {{ item.name }}
                     </p>
                     <p class="d-md-none">
-                      <span class="font-weight-bold">Price USD:</span>
-                      ${{
-                        item.quotes.USD.price.toLocaleString("en-US", {
-                          minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
-                        })
-                      }}
+                      <span class="font-weight-bold">Price:</span>
+                      ${{ item.current_price }}
                     </p>
-                    <p class="d-md-none">
-                      <span class="font-weight-bold">Price EUR:</span>
-                      {{
-                        item.quotes.EUR.price.toLocaleString("de-DE", {
-                          minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
-                        })
-                      }}€
-                    </p>
-                    <p v-if="item.quotes.USD.market_cap" class="d-md-none">
+                    <p v-if="item.market_cap" class="d-md-none">
                       <span class="font-weight-bold">Market Cap:</span>
-                      ${{ item.quotes.USD.market_cap.toLocaleString("en-US") }}
+                      ${{ item.market_cap.toLocaleString("en-US") }}
                     </p>
                     <p v-else class="d-md-none">
                       <span class="font-weight-bold">Market Cap:</span> 0
@@ -139,7 +120,7 @@
                     <p>
                       <span class="font-weight-bold">All-time-High:</span>
                       ${{
-                        item.quotes.USD.ath_price.toLocaleString("en-US", {
+                        item.ath.toLocaleString("en-US", {
                           minimumSignificantDigits: 2,
                           maximumSignificantDigits: 6
                         })
@@ -147,22 +128,59 @@
                     </p>
                     <p>
                       <span class="font-weight-bold">Date of ATH:</span>
-                      {{ formatDate(item.quotes.USD.ath_date) }}
+                      {{ formatDate(item.ath_date) }}
+                    </p>
+                    <p>
+                      <span class="font-weight-bold">All-time-Low:</span>
+                      ${{
+                        item.atl.toLocaleString("en-US", {
+                          minimumSignificantDigits: 2,
+                          maximumSignificantDigits: 6
+                        })
+                      }}
+                    </p>
+                    <p>
+                      <span class="font-weight-bold">Date of ATL:</span>
+                      {{ formatDate(item.atl_date) }}
                     </p>
                   </td>
-                </tr>-->
+                </tr>
               </template>
             </tbody>
           </template>
         </v-data-table>
+        <v-btn
+          v-if="enablePagination"
+          :loading="btnLoading"
+          color="teal"
+          class="white--text"
+          @click="loadMore"
+          >load next 250 coins</v-btn
+        >
       </section>
     </section>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CoinTable",
+  props: {
+    perPage: {
+      type: Number,
+      default: 250
+    },
+    page: {
+      type: Number,
+      default: 1
+    },
+    enablePagination: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       headers: [
@@ -170,7 +188,7 @@ export default {
           text: "#",
           align: "center",
           sortable: true,
-          value: "rank"
+          value: "market_cap_rank"
         },
         {
           text: "Name",
@@ -184,24 +202,29 @@ export default {
         {
           text: "Price $",
           align: "right",
-          class: "hidden-xs-only"
+          class: "hidden-xs-only",
+          value: "current_price"
         },
         {
           text: "1h",
-          align: "right"
+          align: "right",
+          value: "price_change_percentage_1h_in_currency"
         },
         {
           text: "24h",
-          align: "right"
+          align: "right",
+          value: "price_change_percentage_24h_in_currency"
         },
         {
           text: "7d",
-          align: "right"
+          align: "right",
+          value: "price_change_percentage_7d_in_currency"
         },
         {
           text: "Market Cap",
           align: "right",
-          class: "hidden-xs-only"
+          class: "hidden-xs-only",
+          value: "market_cap"
         }
       ],
       search: "",
@@ -209,17 +232,18 @@ export default {
       loading: true,
       errored: false,
       info: null,
-      perPage: 100,
-      page: 1
+      btnLoading: false,
+      internalPerPage: this.perPage,
+      internalPage: this.page
     };
   },
   mounted() {
     axios
       .get(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${this.internalPerPage}&page=${this.internalPage}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
       )
       .then(response => {
-        console.log("get data", response.data);
+        // console.log(response.data[0]);
         this.info = response.data;
       })
       .catch(error => {
@@ -240,6 +264,28 @@ export default {
       } else {
         this.expanded = item;
       }
+    },
+    loadMore() {
+      this.btnLoading = true;
+      this.internalPerPage = 250;
+      this.internalPage += 1;
+      axios
+        .get(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${this.internalPerPage}&page=${this.internalPage}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
+        )
+        .then(response => {
+          if (response) {
+            this.info = this.info.concat(response.data);
+          } else {
+            this.internalPage = 1;
+            console.warn("no more coins found");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => (this.btnLoading = false));
     }
   }
 };
