@@ -11,7 +11,7 @@ export default new Router({
     {
       path: "/",
       name: "table",
-      component: Table
+      component: Table,
     },
     {
       path: "/about",
@@ -20,37 +20,37 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+        import(/* webpackChunkName: "about" */ "./views/About.vue"),
     },
     {
       path: "/profile",
       name: "profile",
       component: () =>
-        import(/* webpackChunkName: "profile" */ "./views/Profile.vue")
+        import(/* webpackChunkName: "profile" */ "./views/Profile.vue"),
     },
     {
       path: "/settings",
       name: "settings",
       component: () =>
-        import(/* webpackChunkName: "settings" */ "./views/Settings.vue")
+        import(/* webpackChunkName: "settings" */ "./views/Settings.vue"),
     },
     {
       path: "/watchlist",
       name: "watchlist",
       component: () =>
-        import(/* webpackChunkName: "watchlist" */ "./views/Watchlist.vue")
+        import(/* webpackChunkName: "watchlist" */ "./views/Watchlist.vue"),
     },
     {
       path: "/portfolio",
       name: "portfolio",
       component: () =>
-        import(/* webpackChunkName: "portfolio" */ "./views/Portfolio.vue")
+        import(/* webpackChunkName: "portfolio" */ "./views/Portfolio.vue"),
     },
     {
       path: "/top100",
       name: "top100",
       component: () =>
-        import(/* webpackChunkName: "portfolio" */ "./views/Top100.vue")
-    }
-  ]
+        import(/* webpackChunkName: "portfolio" */ "./views/Top100.vue"),
+    },
+  ],
 });

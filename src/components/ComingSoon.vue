@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "ComingSoon"
+  name: "ComingSoon",
 };
 </script>
 

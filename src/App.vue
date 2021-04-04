@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       drawer: null,
-      bottomNav: 3
+      bottomNav: 3,
     };
   },
   computed: {
@@ -128,8 +128,8 @@ export default {
         default:
           return "teal";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

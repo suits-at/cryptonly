@@ -27,7 +27,7 @@
           :footer-props="{
             itemsPerPageOptions: [100, 250, { text: 'all', value: -1 }],
             disablePagination: !this.enablePagination,
-            disableItemsPerPage: !this.enablePagination
+            disableItemsPerPage: !this.enablePagination,
           }"
         >
           <template v-slot:body="{ items }">
@@ -56,7 +56,7 @@
                         positive:
                           item.price_change_percentage_1h_in_currency > 0,
                         negative:
-                          item.price_change_percentage_1h_in_currency < 0
+                          item.price_change_percentage_1h_in_currency < 0,
                       }"
                       >{{
                         item.price_change_percentage_1h_in_currency.toFixed(2)
@@ -70,7 +70,7 @@
                         positive:
                           item.price_change_percentage_24h_in_currency > 0,
                         negative:
-                          item.price_change_percentage_24h_in_currency < 0
+                          item.price_change_percentage_24h_in_currency < 0,
                       }"
                       >{{
                         item.price_change_percentage_24h_in_currency.toFixed(2)
@@ -84,7 +84,7 @@
                         positive:
                           item.price_change_percentage_7d_in_currency > 0,
                         negative:
-                          item.price_change_percentage_7d_in_currency < 0
+                          item.price_change_percentage_7d_in_currency < 0,
                       }"
                       >{{
                         item.price_change_percentage_7d_in_currency.toFixed(2)
@@ -122,7 +122,7 @@
                       ${{
                         item.ath.toLocaleString("en-US", {
                           minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
+                          maximumSignificantDigits: 6,
                         })
                       }}
                     </p>
@@ -135,7 +135,7 @@
                       ${{
                         item.atl.toLocaleString("en-US", {
                           minimumSignificantDigits: 2,
-                          maximumSignificantDigits: 6
+                          maximumSignificantDigits: 6,
                         })
                       }}
                     </p>
@@ -170,16 +170,16 @@ export default {
   props: {
     perPage: {
       type: Number,
-      default: 250
+      default: 250,
     },
     page: {
       type: Number,
-      default: 1
+      default: 1,
     },
     enablePagination: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
@@ -188,44 +188,44 @@ export default {
           text: "#",
           align: "center",
           sortable: true,
-          value: "market_cap_rank"
+          value: "market_cap_rank",
         },
         {
           text: "Name",
           value: "name",
-          class: "hidden-xs-only"
+          class: "hidden-xs-only",
         },
         {
           text: "Symbol",
-          value: "symbol"
+          value: "symbol",
         },
         {
           text: "Price $",
           align: "right",
           class: "hidden-xs-only",
-          value: "current_price"
+          value: "current_price",
         },
         {
           text: "1h",
           align: "right",
-          value: "price_change_percentage_1h_in_currency"
+          value: "price_change_percentage_1h_in_currency",
         },
         {
           text: "24h",
           align: "right",
-          value: "price_change_percentage_24h_in_currency"
+          value: "price_change_percentage_24h_in_currency",
         },
         {
           text: "7d",
           align: "right",
-          value: "price_change_percentage_7d_in_currency"
+          value: "price_change_percentage_7d_in_currency",
         },
         {
           text: "Market Cap",
           align: "right",
           class: "hidden-xs-only",
-          value: "market_cap"
-        }
+          value: "market_cap",
+        },
       ],
       search: "",
       expanded: false,
@@ -234,7 +234,7 @@ export default {
       info: null,
       btnLoading: false,
       internalPerPage: this.perPage,
-      internalPage: this.page
+      internalPage: this.page,
     };
   },
   mounted() {
@@ -242,11 +242,11 @@ export default {
       .get(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${this.internalPerPage}&page=${this.internalPage}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
       )
-      .then(response => {
+      .then((response) => {
         // console.log(response.data[0]);
         this.info = response.data;
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         this.errored = true;
       })
@@ -255,8 +255,9 @@ export default {
   methods: {
     formatDate(date) {
       const newDate = new Date(date);
-      return `${newDate.getDate()}.${newDate.getMonth() +
-        1}.${newDate.getFullYear()}`;
+      return `${newDate.getDate()}.${
+        newDate.getMonth() + 1
+      }.${newDate.getFullYear()}`;
     },
     setExpanded(item) {
       if (this.expanded === item) {
@@ -273,7 +274,7 @@ export default {
         .get(
           `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${this.internalPerPage}&page=${this.internalPage}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
         )
-        .then(response => {
+        .then((response) => {
           if (response) {
             this.info = this.info.concat(response.data);
           } else {
@@ -281,13 +282,13 @@ export default {
             console.warn("no more coins found");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.errored = true;
         })
         .finally(() => (this.btnLoading = false));
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

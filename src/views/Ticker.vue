@@ -9,6 +9,6 @@ import CoinTable from "../components/CoinTable";
 
 export default {
   name: "Ticker",
-  components: { CoinTable }
+  components: { CoinTable },
 };
 </script>

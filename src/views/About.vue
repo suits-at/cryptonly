@@ -7,6 +7,6 @@
 import ComingSoon from "../components/ComingSoon";
 
 export default {
-  components: { ComingSoon }
+  components: { ComingSoon },
 };
 </script>
