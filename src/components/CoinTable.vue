@@ -40,7 +40,9 @@
                 >
                   <td class="text-center">{{ item.market_cap_rank }}</td>
                   <td class="text-left hidden-xs-only">{{ item.name }}</td>
-                  <td class="text-left uppercase">{{ item.symbol }}</td>
+                  <td class="text-left uppercase" style="max-width: 100px">
+                    {{ item.symbol }}
+                  </td>
                   <td class="hidden-xs-only">
                     <!--                    ${{
                     item.current_price.toLocaleString("en-US", {
