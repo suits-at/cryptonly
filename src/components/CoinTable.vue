@@ -145,6 +145,19 @@
                       <span class="font-weight-bold">Date of ATL:</span>
                       {{ formatDate(item.atl_date) }}
                     </p>
+                    <p class="font-weight-bold">
+                      WatchList:
+                      <v-btn
+                        v-if="watchListMode"
+                        icon
+                        @click="updateWatchList(item.id)"
+                      >
+                        <v-icon v-if="isOnWatchList(item.id)" color="yellow"
+                          >fas fa-star</v-icon
+                        >
+                        <v-icon v-else color="yellow">far fa-star</v-icon>
+                      </v-btn>
+                    </p>
                   </td>
                 </tr>
               </template>
@@ -152,7 +165,7 @@
           </template>
         </v-data-table>
         <v-btn
-          v-if="enablePagination"
+          v-if="enablePagination && !isWatchList"
           :loading="btnLoading"
           color="teal"
           class="white--text"
@@ -161,11 +174,20 @@
         >
       </section>
     </section>
+    <v-snackbar v-model="snackbar">
+      {{ snackBarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { lsTest } from "@/helpers/localstorage";
 
 export default {
   name: "CoinTable",
@@ -181,6 +203,10 @@ export default {
     enablePagination: {
       type: Boolean,
       default: true,
+    },
+    isWatchList: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -237,16 +263,27 @@ export default {
       btnLoading: false,
       internalPerPage: this.perPage,
       internalPage: this.page,
+      watchListMode: false,
+      watchList: [],
+      snackbar: false,
+      snackBarText: "empty",
     };
   },
   mounted() {
+    this.checkIfWatchList();
+
     axios
       .get(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${this.internalPerPage}&page=${this.internalPage}&sparkline=false&price_change_percentage=1h%2C24h%2C7d`
       )
       .then((response) => {
-        // console.log(response.data[0]);
-        this.info = response.data;
+        let watchList = response.data;
+        if (this.isWatchList) {
+          watchList = watchList.filter((coin) =>
+            this.watchList.includes(coin.id)
+          );
+        }
+        this.info = watchList;
       })
       .catch((error) => {
         console.log(error);
@@ -289,6 +326,46 @@ export default {
           this.errored = true;
         })
         .finally(() => (this.btnLoading = false));
+    },
+    checkIfWatchList() {
+      this.watchListMode = lsTest();
+      const watchList = localStorage.getItem("watchList");
+      if (typeof watchList === "string") {
+        this.watchList = JSON.parse(watchList);
+      }
+    },
+    isOnWatchList(coinId) {
+      if (lsTest()) {
+        if (!this.watchList.length) {
+          return false;
+        }
+        if (this.watchList.includes(coinId)) {
+          return true;
+        }
+      }
+      return false;
+    },
+    updateWatchList(coinId) {
+      if (lsTest()) {
+        const watchList = localStorage.getItem("watchList");
+        if (typeof watchList === "string") {
+          this.watchList = JSON.parse(watchList);
+        }
+        if (!this.watchList.length) {
+          this.watchList = [coinId];
+        } else {
+          if (this.watchList.includes(coinId)) {
+            this.watchList.splice(this.watchList.indexOf(coinId), 1);
+            this.snackBarText = "removed coin from watchlist";
+            this.snackbar = true;
+          } else {
+            this.watchList.push(coinId);
+            this.snackBarText = "successfully starred coin";
+            this.snackbar = true;
+          }
+        }
+        localStorage.setItem("watchList", JSON.stringify(this.watchList));
+      }
     },
   },
 };

@@ -93,7 +93,7 @@
             <v-icon color="white">fas fa-home</v-icon>
           </v-btn>
 
-          <v-btn to="/watchlist">
+          <v-btn to="/watchList">
             <span class="white--text">Watchlist</span>
             <v-icon color="white">fas fa-eye</v-icon>
           </v-btn>

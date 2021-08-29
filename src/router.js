@@ -35,10 +35,10 @@ export default new Router({
         import(/* webpackChunkName: "settings" */ "./views/Settings.vue"),
     },
     {
-      path: "/watchlist",
-      name: "watchlist",
+      path: "/watchList",
+      name: "watchList",
       component: () =>
-        import(/* webpackChunkName: "watchlist" */ "./views/Watchlist.vue"),
+        import(/* webpackChunkName: "watchList" */ "./views/WatchList.vue"),
     },
     {
       path: "/portfolio",
